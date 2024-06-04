@@ -1,19 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/universal_button_widget.dart';
 import '../../../../device_manager/screen_constants.dart';
-import '../../../../routes/routes.dart';
 import '../../../../utils/TextStyles.dart';
 import '../../../../utils/colors/app_colors.dart';
-import '../../../../utils/common_text_form_field.dart';
 import '../../../../utils/text_utils/app_strings.dart';
 import '../../../../utils/utils.dart';
 import '../../../models/users.dart';
 import '../controller/home_controller.dart';
-import '../widgets/home_card_widget.dart';
 import 'drawer_data_screen.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -87,68 +83,92 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             ),
-                            Obx(()=> AppBar(
-                                title: Text('Random User List'),
-                                actions: [
-                                  IconButton(
-                                    icon: Icon(Icons.sort_by_alpha),
-                                    onPressed: () {
-                                      controller.sortUsers(true);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.sort),
-                                    onPressed: () {
-                                      controller.sortUsers(false);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.person_search),
-                                    onPressed: () {
-                                      controller.showYoungestUsers();
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: controller.selectedUsers.isNotEmpty ? () {
-                                      controller.deleteSelectedUsers();
-                                    } : null,
-                                  ),
-                                                    ]),
+                            Obx(
+                              () => AppBar(
+                                  title: Text(AppStrings.randomList.tr,
+                                      style: TextStyles
+                                          .carousalSubTitleWidgetBlueText
+                                          .copyWith(fontSize: 15)),
+                                  actions: [
+                                    IconButton(
+                                      icon: const Icon(Icons.sort_by_alpha,
+                                          color: CustomColor.white),
+                                      onPressed: () {
+                                        controller.sortUsers(true);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.sort,
+                                          color: CustomColor.white),
+                                      onPressed: () {
+                                        controller.sortUsers(false);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.person_search,
+                                          color: CustomColor.white),
+                                      onPressed: () {
+                                        controller.showYoungestUsers();
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                      ),
+                                      onPressed: controller
+                                              .selectedUsers.isNotEmpty
+                                          ? () {
+                                              controller.deleteSelectedUsers();
+                                            }
+                                          : null,
+                                    ),
+                                  ]),
                             ),
                             Container(
                               height: ScreenConstant.defaultHeightTen,
                             ),
-
                             Container(
                               height: ScreenConstant.defaultHeightTen,
                             ),
-                            Obx(()=> controller.isLoading.value?const Center(child: CircularProgressIndicator(),):UniversalButtonWidget(
-                                ontap: () async {
-                                  controller.isLoading.value = true;
-                                  try{
-                                    final result = await InternetAddress.lookup("example.com");
-                                    if(result.isNotEmpty && result[0].rawAddress.isNotEmpty){
-                                      controller.fetchUsersFromApi(10);
-                                    }else{
-                                      showFailureSnackBar("Error", "No internet available!");
-                                      controller.isLoading.value = false;
-                                    }
-                                  }on SocketException catch(_){
-                                    showFailureSnackBar("Error", "No internet available!");
-                                    controller.isLoading.value = false;
-                                  }
-                                },
-                                color: Get.theme.dividerColor,
-                                margin: EdgeInsets.symmetric(
-                                  vertical: ScreenConstant.defaultHeightFifteen,
-                                  horizontal: ScreenConstant.defaultWidthTwenty,
-                                ),
-                                leadingIconvisible: true,
-                                title: AppStrings.addVlog.tr,
-                                titleTextStyle: TextStyles.textStyleRegular
-                                    .apply(color: CustomColor.white),
-                              ),
+                            Obx(
+                              () => controller.isLoading.value
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : UniversalButtonWidget(
+                                      ontap: () async {
+                                        controller.isLoading.value = true;
+                                        try {
+                                          final result =
+                                              await InternetAddress.lookup(
+                                                  AppStrings.google);
+                                          if (result.isNotEmpty &&
+                                              result[0].rawAddress.isNotEmpty) {
+                                            controller.fetchUsersFromApi(10);
+                                          } else {
+                                            showFailureSnackBar(AppStrings.error.tr,
+                                                AppStrings.error.tr);
+                                            controller.isLoading.value = false;
+                                          }
+                                        } on SocketException catch (_) {
+                                          showFailureSnackBar(AppStrings.error.tr,
+                                              AppStrings.error.tr);
+                                          controller.isLoading.value = false;
+                                        }
+                                      },
+                                      color: Get.theme.dividerColor,
+                                      margin: EdgeInsets.symmetric(
+                                        vertical:
+                                            ScreenConstant.defaultHeightFifteen,
+                                        horizontal:
+                                            ScreenConstant.defaultWidthTwenty,
+                                      ),
+                                      leadingIconvisible: true,
+                                      title: AppStrings.addVlog.tr,
+                                      titleTextStyle: TextStyles
+                                          .textStyleRegular
+                                          .apply(color: CustomColor.white),
+                                    ),
                             ),
                             Container(
                               height: ScreenConstant.defaultHeightTen,
@@ -162,22 +182,26 @@ class HomeScreen extends GetView<HomeController> {
                                           horizontal: ScreenConstant
                                               .defaultWidthTwenty),
                                       child: ListView.builder(
-                                        physics:const ClampingScrollPhysics(),
+                                        physics: const ClampingScrollPhysics(),
                                         shrinkWrap: true,
                                         itemCount: controller.users.length,
                                         itemBuilder: (context, index) {
                                           User user = controller.users[index];
                                           return ListTile(
                                             leading: CircleAvatar(
-                                              backgroundImage: NetworkImage(user.picture),
+                                              backgroundImage:
+                                                  NetworkImage(user.picture),
                                             ),
-                                            title: Text('${user.firstName} ${user.lastName}'),
-                                            subtitle: Text('Age: ${user.age}'),
+                                            title: Text(
+                                                '${user.firstName} ${user.lastName}'),
+                                            subtitle: Text('${AppStrings.age}: ${user.age}'),
                                             trailing: Obx(() {
                                               return Checkbox(
-                                                value: controller.selectedUsers.contains(user),
+                                                value: controller.selectedUsers
+                                                    .contains(user),
                                                 onChanged: (value) {
-                                                  controller.toggleSelection(user);
+                                                  controller
+                                                      .toggleSelection(user);
                                                 },
                                               );
                                             }),

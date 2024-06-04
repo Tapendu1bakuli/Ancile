@@ -2,12 +2,17 @@ class AppStrings{
   //Nuritopia
   static const String welcomeToNuritopia = "Welcome to NURITOPIA 2D";
   static const String welcomeToAncile = "Welcome to Ancile";
+  static const String randomList = "Random User List";
+  static const String getList = "Get List";
+  static const String google = "google.com";
   static const String updateDetails = "Update details";
   static const String toggleBetweenTheme = "Choose Theme";
   static const String light = "Light";
   static const String dark = "Dark";
   static const String insertVlog = "Insert vlog:";
-  static const String addVlog = "Add vlog";
+  static const String addVlog = "Add random list";
+  static const String error = "Error!";
+  static const String noInternet = "No internet available!";
   static const String addImage = "Add image";
   static const String deleteImage = "Delete image";
   static const String updateVlog = "Update vlog";

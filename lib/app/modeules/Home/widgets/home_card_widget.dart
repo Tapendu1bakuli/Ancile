@@ -10,120 +10,36 @@ class HomeCardWidget extends StatelessWidget {
   HomeCardWidget(
       {super.key,
       this.image,
-      this.title,
-      this.description,
-      this.onTapEdit,
-      this.onTapDelete});
+      this.firstName,
+      this.lastName,
+        this.age,
+        this.value,
+      this.onTap,
+      });
 
   String? image;
-  String? title;
-  String? description;
-  Function()? onTapEdit;
-  Function()? onTapDelete;
+  String? firstName;
+  String? lastName;
+  int? age;
+  bool? value;
+  Function(bool?)? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 20.0,
-          ),
-        ],
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            CustomColor.alertDialogButton,
-            CustomColor.white,
-            CustomColor.dividerColor
-          ],
-        ),
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage:
+        NetworkImage(image!),
       ),
-      margin: EdgeInsets.symmetric(
-          horizontal: ScreenConstant.defaultWidthTen,
-          vertical: ScreenConstant.defaultHeightFifteen),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: ScreenConstant.defaultWidthTen,
-            vertical: ScreenConstant.defaultHeightFifteen),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: SizedBox(
-                  height: ScreenConstant.defaultHeightNinety,
-                  child: Image.file(
-                    fit: BoxFit.fitWidth,
-                    File(image ?? ""),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: ScreenConstant.defaultWidthTen,
-            ),
-            Expanded(
-              flex: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    textAlign: TextAlign.start,
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text:  AppStrings.title.tr,
-                          style: TextStyles.homeTabStyleSemiBold.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w700,color: CustomColor.primaryBlue),
-                        ),
-                        TextSpan(text:title ?? "",style: TextStyles.homeTabStyleSemiBold.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w400),),
-
-                      ],
-                    ),
-                  ),
-                  Text.rich(
-                    textAlign: TextAlign.start,
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text:  AppStrings.description.tr,
-                          style: TextStyles.homeTabStyleSemiBold.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w700,color: CustomColor.primaryBlue),
-                        ),
-                        TextSpan(text:description ?? "",style: TextStyles.homeTabStyleSemiBold.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w400),),
-
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            InkWell(
-                onTap: onTapEdit,
-                child: const Icon(
-                  Icons.edit,
-                  color: CustomColor.primaryBlue,
-                )),
-            Container(
-              width: ScreenConstant.defaultWidthTen,
-            ),
-            InkWell(
-                onTap: onTapDelete,
-                child: const Icon(
-                  Icons.delete,
-                  color: CustomColor.orange,
-                ))
-          ],
-        ),
-      ),
+      title: Text(
+          '$firstName $lastName'),
+      subtitle: Text('Age: $age'),
+      trailing: Obx(() {
+        return Checkbox(
+          value: value,
+          onChanged: onTap
+        );
+      }),
     );
   }
 }
